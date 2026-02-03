@@ -16,7 +16,7 @@ NumberOfModules=3
 Version=10.3
 @EndOfDesignText@
 #Region Project Attributes 
-	#MainFormWidth: 600
+	#MainFormWidth: 900
 	#MainFormHeight: 600 
 #End Region
 #Macro: Title, GitHub, ide://run?file=%COMSPEC%&Args=/c&Args=github&Args=..\..\..\%PROJECT_NAME%

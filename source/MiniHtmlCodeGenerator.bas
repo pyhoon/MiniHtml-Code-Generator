@@ -19,35 +19,45 @@ End Sub
 Public Sub Generate (HtmlText As String, SubName As String) As String
 	Dim parser As MiniHtmlParser
 	parser.Initialize
+	' root is the container returned by the parser
 	Dim root As HtmlNode = parser.Parse(HtmlText)
 	
 	mOutput.Initialize
 	TagCounters.Clear
 	
-	' Generate Header
 	mOutput.Append("Sub ").Append(SubName).Append(" As String").Append(CRLF)
 	
+	' 1. Find the primary starting node (skipping DOCTYPE)
+	Dim StartNode As HtmlNode
 	For Each node As HtmlNode In root.Children
+		If node.Name.EqualsIgnoreCase("!DOCTYPE") Then Continue
 		If node.Name <> "text" And node.Name <> "comment" Then
-			Dim varName As String = GetNextVarName(node.Name)
-			GenerateNodeCode(node, varName, "")
-			mOutput.Append(mIndent).Append("Return ").Append(varName).Append(".Build").Append(CRLF)
-			Exit 
+			StartNode = node
+			Exit ' Start with the first real tag (usually <html>)
 		End If
 	Next
+	
+	' 2. Begin recursive generation
+	If StartNode.IsInitialized Then
+		Dim varName As String = GetNextVarName(StartNode.Name)
+		GenerateNodeCode(StartNode, varName, "")
+		mOutput.Append(mIndent).Append("Return ").Append(varName).Append(".Build").Append(CRLF)
+	Else
+		mOutput.Append(mIndent).Append("Return """"").Append(CRLF)
+	End If
 	
 	mOutput.Append("End Sub").Append(CRLF)
 	Return mOutput.ToString
 End Sub
 
 Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As String)
-	' 1. Check for CDN Resources (CSS/JS)
+	' Handle CDN resources specifically (CSS links and JS scripts)
 	If IsCDN(node) Then
 		HandleCDN(node, parentVar)
 		Return
 	End If
 
-	' 2. Tag Initialization
+	' Initialize the tag
 	Dim initCall As String = "CreateTag(""" & node.Name & """)"
 	If node.Name = "meta" Then initCall = "CreateMeta"
 	
@@ -55,9 +65,13 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 	If parentVar <> "" Then mOutput.Append(".up(").Append(parentVar).Append(")")
 	mOutput.Append(CRLF)
 
-	' 3. Attribute Mapping
+	' Map standard attributes to specific MiniHtml methods
 	For Each attr As HtmlAttribute In node.Attributes
-		If node.Name = "meta" And (attr.Key = "name" Or attr.Key = "content" Or attr.Key = "charset") Then Continue
+		' Skip meta attributes already handled by custom logic if needed
+		If node.Name = "meta" And (attr.Key = "name" Or attr.Key = "content" Or attr.Key = "charset") Then
+			mOutput.Append(mIndent).Append(varName).Append(".attr(""").Append(attr.Key).Append(""", """).Append(attr.Value).Append(""")").Append(CRLF)
+			Continue
+		End If
 		
 		Select Case attr.Key.ToLowerCase
 			Case "class": mOutput.Append(mIndent).Append(varName).Append(".cls(""").Append(attr.Value).Append(""")").Append(CRLF)
@@ -67,9 +81,10 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 		End Select
 	Next
 
-	' 4. Formatting & Children
+	' Auto-format if the tag is complex
 	If node.Attributes.Size > 3 Then mOutput.Append(mIndent).Append(varName).Append(".FormatAttributes = True").Append(CRLF)
 
+	' Process children (text, comments, and nested tags)
 	For Each child As HtmlNode In node.Children
 		If child.Name = "text" Then
 			Dim txt As String = GetAttrValue(child, "value").Trim
@@ -82,8 +97,7 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 	Next
 End Sub
 
-' --- Internal Helpers ---
-
+' Helpers for CDN detection and attribute extraction
 Private Sub IsCDN (node As HtmlNode) As Boolean
 	Return (node.Name = "link" And GetAttrValue(node, "rel") = "stylesheet") Or _
 	       (node.Name = "script" And GetAttrValue(node, "src") <> "")
