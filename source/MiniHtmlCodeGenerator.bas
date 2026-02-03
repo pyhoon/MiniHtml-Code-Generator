@@ -73,7 +73,7 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 			Continue
 		End If
 		
-		Select Case attr.Key.ToLowerCase
+		Select attr.Key.ToLowerCase
 			Case "class": mOutput.Append(mIndent).Append(varName).Append(".cls(""").Append(attr.Value).Append(""")").Append(CRLF)
 			Case "style": mOutput.Append(mIndent).Append(varName).Append(".sty(""").Append(attr.Value).Append(""")").Append(CRLF)
 			Case "lang":  mOutput.Append(mIndent).Append(varName).Append(".lang(""").Append(attr.Value).Append(""")").Append(CRLF)
