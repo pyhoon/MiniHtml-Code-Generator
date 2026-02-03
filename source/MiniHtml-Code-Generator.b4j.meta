@@ -1,6 +1,15 @@
 ﻿ModuleBookmarks0=
+ModuleBookmarks1=
+ModuleBookmarks2=
+ModuleBookmarks3=
 ModuleBreakpoints0=
+ModuleBreakpoints1=
+ModuleBreakpoints2=
+ModuleBreakpoints3=
 ModuleClosedNodes0=
-NavigationStack=Visual Designer,Layout1.bjl,-100,6,Main,Process_Globals,7,5,Main,Button1_Click,19,6,Main,AppStart,18,0
+ModuleClosedNodes1=
+ModuleClosedNodes2=
+ModuleClosedNodes3=
+NavigationStack=MiniHtmlCodeGenerator,Generate,17,0,MiniHtmlCodeGenerator,GenerateNodeCode,37,0,MiniHtmlCodeGenerator,GetAttrValue,92,0,MiniHtml,ChildById,239,0,Main,Process_Globals,12,0,MiniHtmlCodeGenerator,Initialize,11,0,MiniHtmlCodeGenerator,GetNextVarName,86,0,Main,btnConvert_Action,51,0,Visual Designer,Layout1.bjl,-100,6,Main,AppStart,45,6
 SelectedBuild=0
-VisibleModules=
+VisibleModules=2,1
