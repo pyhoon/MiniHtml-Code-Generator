@@ -7,13 +7,24 @@ Version=10.3
 ' Google Gemini
 ' Class: MiniHtmlCodeGenerator
 Sub Class_Globals
-	Private mOutput As StringBuilder
 	Private TagCounters As Map
-	Private mIndent As String = "    "
+	Private mSubMapper As Map
+	Private mIndent As String = TAB
+	Private mOutput As StringBuilder
+	Private mReturnAsString As Boolean
 End Sub
 
 Public Sub Initialize
+	mSubMapper.Initialize
 	TagCounters.Initialize
+End Sub
+
+Public Sub setSubMapper (SubMapper As Map)
+	mSubMapper = SubMapper
+End Sub
+
+Public Sub setReturnAsString (Value As Boolean)
+	mReturnAsString = Value
 End Sub
 
 Public Sub Generate (HtmlText As String, SubName As String) As String
@@ -25,8 +36,6 @@ Public Sub Generate (HtmlText As String, SubName As String) As String
 	mOutput.Initialize
 	TagCounters.Clear
 	
-	mOutput.Append("Sub ").Append(SubName).Append(" As String").Append(CRLF)
-	
 	' 1. Find the primary starting node (skipping DOCTYPE)
 	Dim StartNode As HtmlNode
 	For Each node As HtmlNode In root.Children
@@ -37,13 +46,40 @@ Public Sub Generate (HtmlText As String, SubName As String) As String
 		End If
 	Next
 	
+	' Auto Sub Name
+	If SubName.EqualsIgnoreCase("<Auto>") Then
+		If StartNode.IsInitialized Then
+			SubName = "Generate" & StartNode.Name.CharAt(0).As(String).ToUpperCase & StartNode.Name.SubString(1)
+		Else
+			SubName = "GenerateHtml"
+		End If
+	End If
+	
+	mOutput.Append("Sub ").Append(SubName).Append(" As ")
+	If mReturnAsString Then
+		mOutput.Append("String")
+	Else
+		mOutput.Append("MiniHtml")
+	End If
+	mOutput.Append(CRLF)	
+	
 	' 2. Begin recursive generation
 	If StartNode.IsInitialized Then
 		Dim varName As String = GetNextVarName(StartNode.Name)
 		GenerateNodeCode(StartNode, varName, "")
-		mOutput.Append(mIndent).Append("Return ").Append(varName).Append(".Build").Append(CRLF)
+		mOutput.Append(mIndent).Append("Return ").Append(varName)
+		If mReturnAsString Then
+			mOutput.Append(".build")
+		End If
+		mOutput.Append(CRLF)
 	Else
-		mOutput.Append(mIndent).Append("Return """"").Append(CRLF)
+		mOutput.Append(mIndent).Append("Return ")
+		If mReturnAsString Then
+			mOutput.Append(QUOTE & QUOTE)
+		Else
+			mOutput.Append("Null")
+		End If
+		mOutput.Append(CRLF)
 	End If
 	
 	mOutput.Append("End Sub").Append(CRLF)
@@ -58,8 +94,11 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 	End If
 
 	' Initialize the tag
-	Dim initCall As String = "CreateTag(""" & node.Name & """)"
+	Dim initCall As String = "CreateTag(" & QUOTE & node.Name & QUOTE & ")"
 	If node.Name = "meta" Then initCall = "CreateMeta"
+	If mSubMapper.IsInitialized Then
+		If mSubMapper.ContainsKey(node.Name) Then initCall = mSubMapper.Get(node.Name)
+	End If
 	
 	mOutput.Append(mIndent).Append("Dim ").Append(varName).Append(" As MiniHtml = ").Append(initCall)
 	If parentVar <> "" Then mOutput.Append(".up(").Append(parentVar).Append(")")
@@ -69,15 +108,15 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 	For Each attr As HtmlAttribute In node.Attributes
 		' Skip meta attributes already handled by custom logic if needed
 		If node.Name = "meta" And (attr.Key = "name" Or attr.Key = "content" Or attr.Key = "charset") Then
-			mOutput.Append(mIndent).Append(varName).Append(".attr(""").Append(attr.Key).Append(""", """).Append(attr.Value).Append(""")").Append(CRLF)
+			mOutput.Append(mIndent).Append(varName).Append(".attr(" & QUOTE).Append(attr.Key).Append(QUOTE & ", " & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
 			Continue
 		End If
 		
 		Select attr.Key.ToLowerCase
-			Case "class": mOutput.Append(mIndent).Append(varName).Append(".cls(""").Append(attr.Value).Append(""")").Append(CRLF)
-			Case "style": mOutput.Append(mIndent).Append(varName).Append(".sty(""").Append(attr.Value).Append(""")").Append(CRLF)
-			Case "lang":  mOutput.Append(mIndent).Append(varName).Append(".lang(""").Append(attr.Value).Append(""")").Append(CRLF)
-			Case Else:    mOutput.Append(mIndent).Append(varName).Append(".attr(""").Append(attr.Key).Append(""", """).Append(attr.Value).Append(""")").Append(CRLF)
+			Case "class": mOutput.Append(mIndent).Append(varName).Append(".cls(" & QUOTE).Append(attr.Value).Append( QUOTE & ")").Append(CRLF)
+			Case "style": mOutput.Append(mIndent).Append(varName).Append(".sty(" & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
+			Case "lang":  mOutput.Append(mIndent).Append(varName).Append(".lang(" & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
+			Case Else:    mOutput.Append(mIndent).Append(varName).Append(".attr(" & QUOTE).Append(attr.Key).Append(QUOTE & ", " & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
 		End Select
 	Next
 
@@ -88,9 +127,9 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 	For Each child As HtmlNode In node.Children
 		If child.Name = "text" Then
 			Dim txt As String = GetAttrValue(child, "value").Trim
-			If txt <> "" Then mOutput.Append(mIndent).Append(varName).Append(".text(""").Append(txt).Append(""")").Append(CRLF)
+			If txt <> "" Then mOutput.Append(mIndent).Append(varName).Append(".text(" & QUOTE).Append(txt).Append(QUOTE & ")").Append(CRLF)
 		Else If child.Name = "comment" Then
-			mOutput.Append(mIndent).Append(varName).Append(".comment2(""").Append(GetAttrValue(child, "value")).Append(""", True)").Append(CRLF)
+			mOutput.Append(mIndent).Append(varName).Append(".comment2(" & QUOTE).Append(GetAttrValue(child, "value")).Append(QUOTE & ", True)").Append(CRLF)
 		Else
 			GenerateNodeCode(child, GetNextVarName(child.Name), varName)
 		End If
@@ -107,9 +146,9 @@ Private Sub HandleCDN (node As HtmlNode, parentVar As String)
 	If parentVar = "" Then Return
 	Dim cdnType As String = IIf(node.Name = "link", "style", "script")
 	Dim srcAttr As String = IIf(node.Name = "link", "href", "src")
-	mOutput.Append(mIndent).Append(parentVar).Append(".cdn2(""").Append(cdnType).Append(""", """) _
-		   .Append(GetAttrValue(node, srcAttr)).Append(""", """).Append(GetAttrValue(node, "integrity")) _
-		   .Append(""", """).Append(GetAttrValue(node, "crossorigin")).Append(""")").Append(CRLF)
+	mOutput.Append(mIndent).Append(parentVar).Append($".cdn2(""$).Append(cdnType).Append($"", ""$) _
+		   .Append(GetAttrValue(node, srcAttr)).Append($"", ""$).Append(GetAttrValue(node, "integrity")) _
+		   .Append($"", ""$).Append(GetAttrValue(node, "crossorigin")).Append($"")"$).Append(CRLF)
 End Sub
 
 Private Sub GetNextVarName (TagName As String) As String

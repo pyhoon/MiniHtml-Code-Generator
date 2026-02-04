@@ -3,15 +3,16 @@ Build1=Default,com.puterise.minihtml.codegenerator
 File1=Layout1.bjl
 FileGroup1=Default Group
 Group=App
-Library1=jcore
-Library2=jfx
-Library3=jxui
-Library4=b4xcollections
+Library1=b4xcollections
+Library2=jcore
+Library3=jfx
+Library4=jxui
+Library5=json
 Module1=MiniHtml
 Module2=MiniHtmlCodeGenerator
 Module3=MiniHtmlParser
 NumberOfFiles=1
-NumberOfLibraries=4
+NumberOfLibraries=5
 NumberOfModules=3
 Version=10.3
 @EndOfDesignText@
@@ -27,35 +28,22 @@ Sub Process_Globals
 	Private xui As XUI 
 	Private txtB4X As TextArea
 	Private txtHtml As TextArea
-	Private BtnConvert As Button
+	Private ChkString As CheckBox
+	Private BtnGenerate As Button
+	Private TxtSubName As B4XView
+	Private TxtSubMap As B4XView
 	Private Generator As MiniHtmlCodeGenerator
+	Private SubName As String = "GeneratePage"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
 	MainForm = Form1
 	MainForm.RootPane.LoadLayout("Layout1")
 	MainForm.Title = "MiniHtml2 Code Generator"
+	MainForm.Show
 	
-	' Create a simple UI layout
-	'Dim p As AnchorPane
-	'p.Initialize("")
-	'MainForm.RootPane.AddNode(p, 0, 0, -1, -1)
-	
-	'txtHtml.Initialize("txtHtml")
-	'txtHtml.PromptText = "Paste your HTML here..."
-	'p.AddNode(txtHtml, 10, 10, 780, 240)
-	
-	'BtnConvert.Initialize("btnConvert")
-	'BtnConvert.Text = "Convert to B4X Code"
-	'p.AddNode(BtnConvert, 300, 260, 200, 40)
-	
-	'txtB4X.Initialize("txtB4X")
-	'txtB4X.Editable = False
-	'p.AddNode(txtB4X, 10, 310, 780, 240)
-	
-	' Anchor settings for resizing
-	'SetAnchors
-	
+	Generator.Initialize
+
 	' Added by me for testing
 	txtHtml.Text = $"<!DOCTYPE html>
 <html lang="en">
@@ -91,25 +79,36 @@ Sub AppStart (Form1 As Form, Args() As String)
     </div>
 </body>
 </html>"$
-	
-	Generator.Initialize
-	MainForm.Show
+	TxtSubMap.Text = $"{"meta": "CreateMeta", "div": "CreateDiv"}"$
 End Sub
 
-'Private Sub SetAnchors
-'	' Logic to keep UI elements responsive
-'	MainForm.RootPane.SetAnchors(txtHtml, 10, 10, 10, -1)
-'	' Note: In a real app, you'd use the Visual Designer for easier anchoring.
-'End Sub
-
-Sub btnConvert_Action
+Sub BtnGenerate_Click
+	If TxtSubName.Text.Trim = "" Then Return
 	If txtHtml.Text.Trim = "" Then Return
-	
+	If TxtSubMap.Text <> "" Then
+		Try
+			Dim SubMap As Map = TxtSubMap.Text.As(JSON).ToMap
+			If SubMap.IsInitialized Then Generator.SubMapper = SubMap
+		Catch
+			Log(LastException.Message)
+		End Try
+	End If
+	Generator.ReturnAsString = ChkString.Checked
 	Try
 		' Generate the B4X code using the input
-		Dim Result As String = Generator.Generate(txtHtml.Text, "GeneratePage")
+		Dim Result As String = Generator.Generate(txtHtml.Text, TxtSubName.Text)
 		txtB4X.Text = Result
 	Catch
 		xui.MsgboxAsync("Error parsing HTML: " & LastException.Message, "Error")
 	End Try
+End Sub
+
+Private Sub ChkAuto_CheckedChange (Checked As Boolean)
+	TxtSubName.Enabled = Not(Checked)
+	If Checked Then
+		SubName = TxtSubName.Text
+		TxtSubName.Text = "<Auto>"
+	Else
+		TxtSubName.Text = SubName
+	End If
 End Sub
