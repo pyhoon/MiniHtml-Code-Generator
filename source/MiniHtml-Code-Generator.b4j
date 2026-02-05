@@ -22,6 +22,7 @@ Version=10.3
 #End Region
 #Macro: Title, GitHub, ide://run?file=%COMSPEC%&Args=/c&Args=github&Args=..\..\..\%PROJECT_NAME%
 #Macro: Title, Release, ide://run?file=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\release
+#Macro: Title, Code bundle, ide://run?File=%ADDITIONAL%\..\B4X\CodeBundle.jar&Args=%PROJECT_NAME%
 Sub Process_Globals
 	Private fx As JFX
 	Private MainForm As Form
@@ -79,7 +80,7 @@ Sub AppStart (Form1 As Form, Args() As String)
     </div>
 </body>
 </html>"$
-	TxtSubMap.Text = $"{"meta": "CreateMeta", "div": "CreateDiv"}"$
+	TxtSubMap.Text = $"{"a": "CreateAnchor", "button": "CreateButton", "meta": "CreateMeta", "div": "CreateDiv", "i": "CreateIcon", "input": "CreateInput"}"$
 End Sub
 
 Sub BtnGenerate_Click

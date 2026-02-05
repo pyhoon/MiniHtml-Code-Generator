@@ -123,13 +123,17 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 	' Auto-format if the tag is complex
 	If node.Attributes.Size > 3 Then mOutput.Append(mIndent).Append(varName).Append(".FormatAttributes = True").Append(CRLF)
 
+	' Aeric: Set as multiline if has 2+ children (experiment)
+	If node.Attributes.Size > 3 Or node.Children.Size > 1 Then mOutput.Append(mIndent).Append(varName).Append(".multiline").Append(CRLF)
+	
 	' Process children (text, comments, and nested tags)
 	For Each child As HtmlNode In node.Children
 		If child.Name = "text" Then
 			Dim txt As String = GetAttrValue(child, "value").Trim
 			If txt <> "" Then mOutput.Append(mIndent).Append(varName).Append(".text(" & QUOTE).Append(txt).Append(QUOTE & ")").Append(CRLF)
 		Else If child.Name = "comment" Then
-			mOutput.Append(mIndent).Append(varName).Append(".comment2(" & QUOTE).Append(GetAttrValue(child, "value")).Append(QUOTE & ", True)").Append(CRLF)
+			'mOutput.Append(mIndent).Append(varName).Append(".comment2(" & QUOTE).Append(GetAttrValue(child, "value")).Append(QUOTE & ", True)").Append(CRLF)
+			mOutput.Append(mIndent).Append(varName).Append(".comment(" & QUOTE).Append(GetAttrValue(child, "value")).Append(QUOTE & ")").Append(CRLF)
 		Else
 			GenerateNodeCode(child, GetNextVarName(child.Name), varName)
 		End If
