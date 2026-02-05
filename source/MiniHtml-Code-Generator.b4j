@@ -44,7 +44,8 @@ Sub AppStart (Form1 As Form, Args() As String)
 	MainForm.Show
 	
 	Generator.Initialize
-
+	Generator.UseLongFunctionName = True
+	
 	' Added by me for testing
 	txtHtml.Text = $"<!DOCTYPE html>
 <html lang="en">

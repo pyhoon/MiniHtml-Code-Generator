@@ -9,14 +9,18 @@ Version=10.3
 Sub Class_Globals
 	Private TagCounters As Map
 	Private mSubMapper As Map
-	Private mIndent As String = TAB
+	Private mIndent As String
 	Private mOutput As StringBuilder
 	Private mReturnAsString As Boolean
+	Private mUseLongFunctionName As Boolean
 End Sub
 
 Public Sub Initialize
 	mSubMapper.Initialize
 	TagCounters.Initialize
+	mIndent = TAB
+	mReturnAsString = False
+	mUseLongFunctionName = False
 End Sub
 
 Public Sub setSubMapper (SubMapper As Map)
@@ -25,6 +29,10 @@ End Sub
 
 Public Sub setReturnAsString (Value As Boolean)
 	mReturnAsString = Value
+End Sub
+
+Public Sub setUseLongFunctionName (Value As Boolean)
+	mUseLongFunctionName = Value
 End Sub
 
 Public Sub Generate (HtmlText As String, SubName As String) As String
@@ -101,38 +109,67 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 	End If
 	
 	mOutput.Append(mIndent).Append("Dim ").Append(varName).Append(" As MiniHtml = ").Append(initCall)
-	If parentVar <> "" Then mOutput.Append(".up(").Append(parentVar).Append(")")
+	If mUseLongFunctionName Then
+		If parentVar <> "" Then mOutput.Append(".addTo(").Append(parentVar).Append(")")
+	Else
+		If parentVar <> "" Then mOutput.Append(".up(").Append(parentVar).Append(")")
+	End If
 	mOutput.Append(CRLF)
 
 	' Map standard attributes to specific MiniHtml methods
 	For Each attr As HtmlAttribute In node.Attributes
 		' Skip meta attributes already handled by custom logic if needed
 		If node.Name = "meta" And (attr.Key = "name" Or attr.Key = "content" Or attr.Key = "charset") Then
-			mOutput.Append(mIndent).Append(varName).Append(".attr(" & QUOTE).Append(attr.Key).Append(QUOTE & ", " & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
+			If mUseLongFunctionName Then
+				mOutput.Append(mIndent).Append(varName).Append(".Attributes.Put(" & QUOTE).Append(attr.Key).Append(QUOTE & ", " & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
+			Else
+				mOutput.Append(mIndent).Append(varName).Append(".attr(" & QUOTE).Append(attr.Key).Append(QUOTE & ", " & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
+			End If
 			Continue
 		End If
 		
 		Select attr.Key.ToLowerCase
-			Case "class": mOutput.Append(mIndent).Append(varName).Append(".cls(" & QUOTE).Append(attr.Value).Append( QUOTE & ")").Append(CRLF)
-			Case "style": mOutput.Append(mIndent).Append(varName).Append(".sty(" & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
-			Case "lang":  mOutput.Append(mIndent).Append(varName).Append(".lang(" & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
-			Case Else:    mOutput.Append(mIndent).Append(varName).Append(".attr(" & QUOTE).Append(attr.Key).Append(QUOTE & ", " & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
+			Case "class":
+				If mUseLongFunctionName Then
+					mOutput.Append(mIndent).Append(varName).Append(".addClass(" & QUOTE).Append(attr.Value).Append( QUOTE & ")").Append(CRLF)
+				Else
+					mOutput.Append(mIndent).Append(varName).Append(".cls(" & QUOTE).Append(attr.Value).Append( QUOTE & ")").Append(CRLF)
+				End If
+			Case "style":
+				If mUseLongFunctionName Then
+					mOutput.Append(mIndent).Append(varName).Append(".addStyle(" & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
+				Else
+					mOutput.Append(mIndent).Append(varName).Append(".sty(" & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
+				End If
+			Case "lang": mOutput.Append(mIndent).Append(varName).Append(".lang(" & QUOTE).Append(attr.Value).Append(QUOTE & ")").Append(CRLF)
+			Case Else:
+				' handle script value to use String Literals
+				If mUseLongFunctionName Then
+					mOutput.Append(mIndent).Append(varName).Append(".Attributes.Put(" & QUOTE).Append(attr.Key).Append(QUOTE & ", ")
+				Else
+					mOutput.Append(mIndent).Append(varName).Append(".attr(" & QUOTE).Append(attr.Key).Append(QUOTE & ", ")
+				End If
+				If node.Name = "script" Then
+					mOutput.Append("$").Append(QUOTE).Append(attr.Value).Append(QUOTE).Append("$")
+				Else
+					mOutput.Append(QUOTE).Append(attr.Value).Append(QUOTE)
+				End If
+				mOutput.Append(")").Append(CRLF)
 		End Select
 	Next
-
+	
 	' Auto-format if the tag is complex
 	If node.Attributes.Size > 3 Then mOutput.Append(mIndent).Append(varName).Append(".FormatAttributes = True").Append(CRLF)
 
 	' Aeric: Set as multiline if has 2+ children (experiment)
 	If node.Attributes.Size > 3 Or node.Children.Size > 1 Then mOutput.Append(mIndent).Append(varName).Append(".multiline").Append(CRLF)
-	
+
 	' Process children (text, comments, and nested tags)
 	For Each child As HtmlNode In node.Children
 		If child.Name = "text" Then
 			Dim txt As String = GetAttrValue(child, "value").Trim
 			If txt <> "" Then mOutput.Append(mIndent).Append(varName).Append(".text(" & QUOTE).Append(txt).Append(QUOTE & ")").Append(CRLF)
 		Else If child.Name = "comment" Then
-			'mOutput.Append(mIndent).Append(varName).Append(".comment2(" & QUOTE).Append(GetAttrValue(child, "value")).Append(QUOTE & ", True)").Append(CRLF)
 			mOutput.Append(mIndent).Append(varName).Append(".comment(" & QUOTE).Append(GetAttrValue(child, "value")).Append(QUOTE & ")").Append(CRLF)
 		Else
 			GenerateNodeCode(child, GetNextVarName(child.Name), varName)
