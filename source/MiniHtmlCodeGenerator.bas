@@ -7,24 +7,30 @@ Version=10.3
 ' Google Gemini
 ' Class: MiniHtmlCodeGenerator
 Sub Class_Globals
-	Private TagCounters As Map
 	Private mSubMapper As Map
-	Private mIndent As String
-	Private mOutput As StringBuilder
+	Private mTagCounters As Map
+	Private mAppendMH As Boolean
 	Private mReturnAsString As Boolean
 	Private mUseLongFunctionName As Boolean
+	Private mOutput As StringBuilder
+	Private mIndent As String
 End Sub
 
 Public Sub Initialize
 	mSubMapper.Initialize
-	TagCounters.Initialize
+	mTagCounters.Initialize
 	mIndent = TAB
+	mAppendMH = False
 	mReturnAsString = False
 	mUseLongFunctionName = False
 End Sub
 
 Public Sub setSubMapper (SubMapper As Map)
 	mSubMapper = SubMapper
+End Sub
+
+Public Sub setAppendMH (Value As Boolean)
+	mAppendMH = Value
 End Sub
 
 Public Sub setReturnAsString (Value As Boolean)
@@ -42,7 +48,7 @@ Public Sub Generate (HtmlText As String, SubName As String) As String
 	Dim root As HtmlNode = parser.Parse(HtmlText)
 	
 	mOutput.Initialize
-	TagCounters.Clear
+	mTagCounters.Clear
 	
 	' 1. Find the primary starting node (skipping DOCTYPE)
 	Dim StartNode As HtmlNode
@@ -107,6 +113,9 @@ Private Sub GenerateNodeCode (node As HtmlNode, varName As String, parentVar As 
 	If mSubMapper.IsInitialized Then
 		If mSubMapper.ContainsKey(node.Name) Then initCall = mSubMapper.Get(node.Name)
 	End If
+	
+	' If chkMH is checked
+	If mAppendMH Then initCall = "MH." & initCall
 	
 	mOutput.Append(mIndent).Append("Dim ").Append(varName).Append(" As MiniHtml = ").Append(initCall)
 	If mUseLongFunctionName Then
@@ -187,15 +196,16 @@ Private Sub HandleCDN (node As HtmlNode, parentVar As String)
 	If parentVar = "" Then Return
 	Dim cdnType As String = IIf(node.Name = "link", "style", "script")
 	Dim srcAttr As String = IIf(node.Name = "link", "href", "src")
-	mOutput.Append(mIndent).Append(parentVar).Append($".cdn2(""$).Append(cdnType).Append($"", ""$) _
-		   .Append(GetAttrValue(node, srcAttr)).Append($"", ""$).Append(GetAttrValue(node, "integrity")) _
-		   .Append($"", ""$).Append(GetAttrValue(node, "crossorigin")).Append($"")"$).Append(CRLF)
+	mOutput.Append(mIndent).Append(parentVar).Append(".cdn2(").Append(QUOTE).Append(cdnType).Append(QUOTE)
+	mOutput.Append(", ").Append(QUOTE).Append(GetAttrValue(node, srcAttr)).Append(QUOTE)
+	mOutput.Append(", ").Append(QUOTE).Append(GetAttrValue(node, "integrity")).Append(QUOTE)
+	mOutput.Append(", ").Append(QUOTE).Append(GetAttrValue(node, "crossorigin")).Append(QUOTE).Append(")").Append(CRLF)
 End Sub
 
 Private Sub GetNextVarName (TagName As String) As String
 	TagName = TagName.Replace("-", "_").ToLowerCase
-	Dim count As Int = TagCounters.GetDefault(TagName, 0) + 1
-	TagCounters.Put(TagName, count)
+	Dim count As Int = mTagCounters.GetDefault(TagName, 0) + 1
+	mTagCounters.Put(TagName, count)
 	Return TagName & count
 End Sub
 

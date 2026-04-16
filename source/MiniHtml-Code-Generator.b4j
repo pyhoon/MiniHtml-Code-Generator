@@ -14,11 +14,13 @@ Module3=MiniHtmlParser
 NumberOfFiles=1
 NumberOfLibraries=5
 NumberOfModules=3
-Version=10.3
+Version=10.5
 @EndOfDesignText@
-#Region Project Attributes 
-	#MainFormWidth: 900
-	#MainFormHeight: 600 
+#Region Project Attributes
+' Name:    MiniHtml Code Generator
+' Version: 0.50
+#MainFormWidth: 900
+#MainFormHeight: 600 
 #End Region
 #Macro: Title, GitHub, ide://run?file=%COMSPEC%&Args=/c&Args=github&Args=..\..\..\%PROJECT_NAME%
 #Macro: Title, Release, ide://run?file=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\release
@@ -30,6 +32,7 @@ Sub Process_Globals
 	Private txtB4X As TextArea
 	Private txtHtml As TextArea
 	Private ChkString As CheckBox
+	Private chkMH As CheckBox
 	Private BtnGenerate As Button
 	Private TxtSubName As B4XView
 	Private TxtSubMap As B4XView
@@ -62,6 +65,7 @@ Sub BtnGenerate_Click
 			Log(LastException.Message)
 		End Try
 	End If
+	Generator.AppendMH = chkMH.Checked
 	Generator.ReturnAsString = ChkString.Checked
 	Try
 		' Generate the B4X code using the input
@@ -80,4 +84,12 @@ Private Sub ChkAuto_CheckedChange (Checked As Boolean)
 	Else
 		TxtSubName.Text = SubName
 	End If
+End Sub
+
+Private Sub chkMH_CheckedChange (Checked As Boolean)
+	BtnGenerate_Click
+End Sub
+
+Private Sub ChkString_CheckedChange (Checked As Boolean)
+	BtnGenerate_Click
 End Sub

@@ -4,8 +4,8 @@ ModulesStructureVersion=1
 Type=Class
 Version=10.3
 @EndOfDesignText@
-' MiniHtml2
-' Version: 2.00-alpha
+' MiniHtml
+' Version: 2.01
 Sub Class_Globals
 	Private mIndents As Int
 	Private mIndentString As String
@@ -48,7 +48,6 @@ Public Sub Initialize (Name As String)
 			mMode = mMeta
 		Case "title", "h1", "h2", "h3", "h4", "h5", "p", "script", "label", "button", "span", "li", "a", "i", "b", "u", "option", "bold", "italic", "underline", "strong", "em", "del", "th", "td", "small", "textarea"
 			mMode = mUniline
-			'mLineFeed = False
 		Case "img", "br"', "link"
 			mMode = mSelf ' self closing tag
 		Case "text", ""
@@ -125,9 +124,15 @@ Public Sub buildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 		SB.Append(key)
 		If attrs.Length > 0 Then
 			SB.Append("=")
-			SB.Append(QUOTE)
-			SB.Append(attrs)
-			SB.Append(QUOTE)
+			If attrs.StartsWith("'") And attrs.EndsWith("'") Then
+				'SB.Append("'")
+				SB.Append(attrs)
+				'SB.Append("'")
+			Else
+				SB.Append(QUOTE)
+				SB.Append(attrs)
+				SB.Append(QUOTE)
+			End If
 		End If
 		
 		If MoreThanOne = False Then
@@ -140,7 +145,8 @@ Public Sub buildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 	
 	Select mMode
 		Case mSelf
-			SB.Append("/>")
+			'SB.Append("/>")
+			SB.Append(">")
 		Case mUniline, mMultiline, mMeta
 			SB.Append(">")
 	End Select
@@ -148,6 +154,7 @@ Public Sub buildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 	For Each tagOrString In mChildren
 		If tagOrString Is MiniHtml Then
 			Dim mCurrent As MiniHtml = tagOrString
+			'If mMode = mUniline Then mCurrent.Mode = mUniline ' (experiment)
 			SB.Append(mCurrent.BuildImpl(indent + 1, False))
 		Else
 			SB.Append(tagOrString)
@@ -156,17 +163,20 @@ Public Sub buildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 	
 	Select mMode
 		Case mUniline
-			If mChildren.Size > 1 Then
+			' Commented (experiment)
+			'If mChildren.Size > 0 Then
+			'SB.Append(CRLF)
+			'If SpecialTags.IndexOf(mName) < 0 Then
+			'	SB.Append(sIndent)
+			'End If
+			'End If
+			SB.Append("</" & mName & ">")
+		Case mMultiline
+			If mChildren.Size > 0 Then
 				SB.Append(CRLF)
 				If SpecialTags.IndexOf(mName) < 0 Then
 					SB.Append(sIndent)
 				End If
-			End If
-			SB.Append("</" & mName & ">")
-		Case mMultiline
-			SB.Append(CRLF)
-			If SpecialTags.IndexOf(mName) < 0 Then
-				SB.Append(sIndent)
 			End If
 			SB.Append("</" & mName & ">")
 	End Select
@@ -229,6 +239,14 @@ Public Sub add (ChildTag As MiniHtml) As MiniHtml
 	Return ChildTag
 End Sub
 
+'Return the Children list
+Public Sub getChildren As List
+	Return mChildren
+End Sub
+Public Sub setChildren (Children As List)
+	mChildren = Children
+End Sub
+
 'Return the Parent tag
 Public Sub getParent As MiniHtml
 	Return mParent
@@ -281,10 +299,12 @@ Public Sub comment2 (value As String, newline As Boolean)
 	text($"<!--${value}-->"$)
 End Sub
 
-Public Sub cdn (format As String, url As String, integrity As String) As MiniHtml
-	Return cdn2(format, url, integrity, "anonymous")
+'<code>body1.cdn("script", "/assets/js/cdn.min.js")</code>
+Public Sub cdn (format As String, url As String) As MiniHtml
+	Return cdn2(format, url, "", "")
 End Sub
 
+'<code>body1.cdn2("script", "/assets/js/cdn.min.js", "sha384-hashes", "anonymous")</code>
 Public Sub cdn2 (format As String, url As String, integrity As String, crossorigin As String) As MiniHtml
 	Select format.ToLowerCase
 		Case "script", "js"
@@ -301,18 +321,13 @@ Public Sub cdn2 (format As String, url As String, integrity As String, crossorig
 	Return Me
 End Sub
 
-Public Sub cdn3 (format As String, url As String, integrity As Boolean, crossorigin As Boolean) As MiniHtml
+'<code>body1.cdn3("script", "/assets/js/cdn.min.js", CreateMap("defer": ""))</code>
+Public Sub cdn3 (format As String, url As String, keyvals As Map) As MiniHtml
 	Select format.ToLowerCase
 		Case "script", "js"
-			Dim map1 As Map = CreateMap("src": url)
-			If integrity Then map1.Put("integrity", "")
-			If crossorigin Then map1.Put("crossorigin", "")
-			mChildren.Add(Create("script").attr2(map1))
+			mChildren.Add(Create("script").attr("src", url).attr2(keyvals))
 		Case "style", "css"
-			Dim map2 As Map = CreateMap("rel": "stylesheet", "href": url)
-			If integrity Then map2.Put("integrity", "")
-			If crossorigin Then map2.Put("crossorigin", "")
-			mChildren.Add(Create("link").attr2(map2))
+			mChildren.Add(Create("link").attr2(CreateMap("rel": "stylesheet", "href": url)).attr2(keyvals))
 	End Select
 	Return Me
 End Sub
@@ -332,8 +347,10 @@ End Sub
 
 ' Add text wrapped in between multiline tags
 Public Sub textWrap (value As String) As MiniHtml
-	mChildren.Add(Create(mNoTag))
-	mChildren.Add(value)
+	Dim child1 As MiniHtml = Create(mNoTag)
+	child1.Indentation = True
+	child1.text(value)
+	mChildren.Add(child1)
 	Return Me
 End Sub
 
@@ -431,6 +448,14 @@ Public Sub StylesAsString As String
 	Return sb.ToString
 End Sub
 
+Public Sub ConvertFromBytes (Buffer() As Byte) As MiniHtml
+	Return Parse(BytesToString(Buffer, 0, Buffer.Length, "UTF-8"))
+End Sub
+
+Public Sub ConvertToBytes As Byte()
+	Return build.GetBytes("UTF8")
+End Sub
+
 Public Sub ConvertToMiniHtml (node1 As HtmlNode) As MiniHtml
     Dim parent As MiniHtml
     parent.Initialize(node1.Name)
@@ -480,17 +505,13 @@ Public Sub ConvertToMiniHtml (node1 As HtmlNode) As MiniHtml
 End Sub
 
 Public Sub Parse (HtmlText As String) As MiniHtml
-	Dim root1 As MiniHtml
 	Dim parser As MiniHtmlParser
 	parser.Initialize
 	Dim node1 As HtmlNode = parser.Parse(HtmlText)
-	For Each node As HtmlNode In node1.Children
-		' Skip text tag
-		If node.Name.EqualsIgnoreCase("text") = False Then
-			root1 = ConvertToMiniHtml(node)
-		End If
+	For Each HtmlNode1 As HtmlNode In node1.Children
+		If HtmlNode1.Name.EqualsIgnoreCase("text") = False Then Return ConvertToMiniHtml(HtmlNode1)
 	Next
-	Return root1
+	Return Create(mNoTag)
 End Sub
 
 ' Wrap script inside script tags
