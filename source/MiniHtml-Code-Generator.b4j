@@ -18,7 +18,7 @@ Version=10.5
 @EndOfDesignText@
 #Region Project Attributes
 ' Name:    MiniHtml Code Generator
-' Version: 0.50
+' Version: 0.60
 #MainFormWidth: 900
 #MainFormHeight: 600 
 #End Region
