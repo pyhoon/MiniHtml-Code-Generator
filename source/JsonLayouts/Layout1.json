@@ -1,0 +1,856 @@
+{
+    "MaterialIcons": false,
+    "Variants": [
+        {
+            "Scale": 1,
+            "Height": 600,
+            "Width": 900
+        }
+    ],
+    "LayoutHeader": {
+        "Version": 5,
+        "DesignerScript": [
+            "'All variants script\nBtnGenerate.HorizontalCenter = 50%x\nTxtSubName.Width = BtnGenerate.Left - 50dip - ChkAuto.Width - ChkString.Width\n'TxtSubName.Right = BtnGenerate.Width - 10dip\nChkAuto.Left = TxtSubName.Right + 10dip\nChkString.Left = ChkAuto.Right + 10dip\nTxtSubMap.Width = 100%x - BtnGenerate.Right - 20dip - chkMH.Width\nTxtSubMap.Left = BtnGenerate.Right + 10dip\nchkMH.Left = TxtSubMap.Right + 10dip\nTxtHtml.Width = 50%x\nTxtB4X.Width = 50%x\nTxtB4X.Left = 50%x",
+            "'Variant specific script: 900x600,scale=1\n"
+        ],
+        "GridSize": 10,
+        "ControlsHeaders": [
+            {
+                "JavaType": ".ButtonWrapper",
+                "DesignerType": "Button",
+                "Name": "BtnGenerate"
+            },
+            {
+                "JavaType": ".CheckboxWrapper",
+                "DesignerType": "CheckBox",
+                "Name": "ChkAuto"
+            },
+            {
+                "JavaType": ".CheckboxWrapper",
+                "DesignerType": "CheckBox",
+                "Name": "chkMH"
+            },
+            {
+                "JavaType": ".CheckboxWrapper",
+                "DesignerType": "CheckBox",
+                "Name": "ChkString"
+            },
+            {
+                "JavaType": ".PaneWrapper$ConcretePaneWrapper",
+                "DesignerType": "Pane",
+                "Name": "Main"
+            },
+            {
+                "JavaType": ".TextInputControlWrapper$TextAreaWrapper",
+                "DesignerType": "TextArea",
+                "Name": "TxtB4X"
+            },
+            {
+                "JavaType": ".TextInputControlWrapper$TextAreaWrapper",
+                "DesignerType": "TextArea",
+                "Name": "TxtHtml"
+            },
+            {
+                "JavaType": ".TextInputControlWrapper$TextFieldWrapper",
+                "DesignerType": "TextField",
+                "Name": "TxtSubMap"
+            },
+            {
+                "JavaType": ".TextInputControlWrapper$TextFieldWrapper",
+                "DesignerType": "TextField",
+                "Name": "TxtSubName"
+            }
+        ],
+        "Files": []
+    },
+    "Data": {
+        "parent": "",
+        "borderColor": {
+            "ValueType": 6,
+            "Value": "0xFF000000"
+        },
+        "drawable": {
+            "color": {
+                "ValueType": 6,
+                "Value": "0xFFF0F8FF"
+            },
+            "csType": "Dbasic.Designer.Drawable.ColorDrawable",
+            "colorKey": "-fx-background-color",
+            "type": "ColorDrawable"
+        },
+        "orientation": "INHERIT",
+        "visible": true,
+        ":kids": {
+            "0": {
+                "parent": "Main",
+                "borderColor": {
+                    "ValueType": 6,
+                    "Value": "0xFF000000"
+                },
+                "shadow": {
+                    "offsetX": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "offsetY": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "csType": "Dbasic.Designer.ShadowGrid",
+                    "stype": 0,
+                    "type": "",
+                    "radius": {
+                        "ValueType": 7,
+                        "Value": 10
+                    },
+                    "shadowColor": {
+                        "ValueType": 6,
+                        "Value": "0xFF000000"
+                    }
+                },
+                "vanchor": 0,
+                "type": ".TextInputControlWrapper$TextFieldWrapper",
+                "enabled": true,
+                "variant0": {
+                    "top": 10,
+                    "left": 20,
+                    "hanchor": 0,
+                    "width": 90,
+                    "vanchor": 0,
+                    "height": 52
+                },
+                "cornerRadius": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "password": false,
+                "top": 32,
+                "borderWidth": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "alpha": {
+                    "ValueType": 7,
+                    "Value": 1
+                },
+                "hanchor": 0,
+                "eventName": "TxtSubName",
+                "tag": "",
+                "text": "GeneratePage",
+                "height": 30,
+                "drawable": {
+                    "color": {
+                        "ValueType": 6,
+                        "Value": "0xFFF0F8FF"
+                    },
+                    "csType": "Dbasic.Designer.Drawable.ColorDrawable",
+                    "colorKey": "-fx-base",
+                    "type": "ColorDrawable"
+                },
+                "visible": true,
+                "csType": "Dbasic.Designer.MetaTextField",
+                "editable": true,
+                "toolTip": "",
+                "javaType": ".TextInputControlWrapper$TextFieldWrapper",
+                "contextMenu": "",
+                "left": 120,
+                "name": "TxtSubName",
+                "width": 100,
+                "extraCss": "",
+                "alignment": "CENTER_LEFT",
+                "prompt": "SubName",
+                "font": {
+                    "fontName": "DEFAULT",
+                    "csType": "Dbasic.Designer.FontGrid",
+                    "fontSize": {
+                        "ValueType": 7,
+                        "Value": 15
+                    },
+                    "bold": false,
+                    "type": "B4IFontWrapper",
+                    "italic": false
+                }
+            },
+            "1": {
+                "parent": "Main",
+                "borderColor": {
+                    "ValueType": 6,
+                    "Value": "0xFF000000"
+                },
+                "shadow": {
+                    "offsetX": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "offsetY": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "csType": "Dbasic.Designer.ShadowGrid",
+                    "stype": 0,
+                    "type": "",
+                    "radius": {
+                        "ValueType": 7,
+                        "Value": 10
+                    },
+                    "shadowColor": {
+                        "ValueType": 6,
+                        "Value": "0xFF000000"
+                    }
+                },
+                "vanchor": 0,
+                "type": ".CheckboxWrapper",
+                "enabled": true,
+                "variant0": {
+                    "top": 10,
+                    "left": 120,
+                    "hanchor": 0,
+                    "width": 80,
+                    "vanchor": 0,
+                    "height": 50
+                },
+                "cornerRadius": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "top": 40,
+                "borderWidth": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "alpha": {
+                    "ValueType": 7,
+                    "Value": 1
+                },
+                "hanchor": 0,
+                "checked": false,
+                "eventName": "ChkAuto",
+                "tag": "",
+                "text": "Auto",
+                "wrapText": false,
+                "height": 30,
+                "drawable": {
+                    "color": {
+                        "ValueType": 6,
+                        "Value": "0xFFF0F8FF"
+                    },
+                    "csType": "Dbasic.Designer.Drawable.ColorDrawable",
+                    "colorKey": "-fx-base",
+                    "type": "ColorDrawable"
+                },
+                "visible": true,
+                "csType": "Dbasic.Designer.MetaCheckBox",
+                "fontAwesome": "",
+                "toolTip": "",
+                "textColor": {
+                    "ValueType": 6,
+                    "Value": "0xFFF0F8FF"
+                },
+                "javaType": ".CheckboxWrapper",
+                "contextMenu": "",
+                "left": 162,
+                "materialIcons": "",
+                "name": "ChkAuto",
+                "width": 100,
+                "extraCss": "",
+                "alignment": "CENTER_LEFT",
+                "font": {
+                    "fontName": "DEFAULT",
+                    "csType": "Dbasic.Designer.FontGrid",
+                    "fontSize": {
+                        "ValueType": 7,
+                        "Value": 15
+                    },
+                    "bold": false,
+                    "type": "B4IFontWrapper",
+                    "italic": false
+                }
+            },
+            "2": {
+                "parent": "Main",
+                "borderColor": {
+                    "ValueType": 6,
+                    "Value": "0xFF000000"
+                },
+                "shadow": {
+                    "offsetX": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "offsetY": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "csType": "Dbasic.Designer.ShadowGrid",
+                    "stype": 0,
+                    "type": "",
+                    "radius": {
+                        "ValueType": 7,
+                        "Value": 10
+                    },
+                    "shadowColor": {
+                        "ValueType": 6,
+                        "Value": "0xFF000000"
+                    }
+                },
+                "vanchor": 0,
+                "type": ".CheckboxWrapper",
+                "enabled": true,
+                "variant0": {
+                    "top": 10,
+                    "left": 120,
+                    "hanchor": 0,
+                    "width": 80,
+                    "vanchor": 0,
+                    "height": 50
+                },
+                "cornerRadius": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "top": 40,
+                "borderWidth": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "alpha": {
+                    "ValueType": 7,
+                    "Value": 1
+                },
+                "hanchor": 0,
+                "checked": false,
+                "eventName": "ChkString",
+                "tag": "",
+                "text": "String",
+                "wrapText": false,
+                "height": 30,
+                "drawable": {
+                    "color": {
+                        "ValueType": 6,
+                        "Value": "0xFFF0F8FF"
+                    },
+                    "csType": "Dbasic.Designer.Drawable.ColorDrawable",
+                    "colorKey": "-fx-base",
+                    "type": "ColorDrawable"
+                },
+                "visible": true,
+                "csType": "Dbasic.Designer.MetaCheckBox",
+                "fontAwesome": "",
+                "toolTip": "",
+                "textColor": {
+                    "ValueType": 6,
+                    "Value": "0xFFF0F8FF"
+                },
+                "javaType": ".CheckboxWrapper",
+                "contextMenu": "",
+                "left": 162,
+                "materialIcons": "",
+                "name": "ChkString",
+                "width": 100,
+                "extraCss": "",
+                "alignment": "CENTER_LEFT",
+                "font": {
+                    "fontName": "DEFAULT",
+                    "csType": "Dbasic.Designer.FontGrid",
+                    "fontSize": {
+                        "ValueType": 7,
+                        "Value": 15
+                    },
+                    "bold": false,
+                    "type": "B4IFontWrapper",
+                    "italic": false
+                }
+            },
+            "3": {
+                "parent": "Main",
+                "borderColor": {
+                    "ValueType": 6,
+                    "Value": "0xFF000000"
+                },
+                "shadow": {
+                    "offsetX": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "offsetY": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "csType": "Dbasic.Designer.ShadowGrid",
+                    "stype": 0,
+                    "type": "",
+                    "radius": {
+                        "ValueType": 7,
+                        "Value": 10
+                    },
+                    "shadowColor": {
+                        "ValueType": 6,
+                        "Value": "0xFF000000"
+                    }
+                },
+                "vanchor": 0,
+                "type": ".CheckboxWrapper",
+                "enabled": true,
+                "variant0": {
+                    "top": 10,
+                    "left": 520,
+                    "hanchor": 0,
+                    "width": 80,
+                    "vanchor": 0,
+                    "height": 50
+                },
+                "cornerRadius": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "top": 40,
+                "borderWidth": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "alpha": {
+                    "ValueType": 7,
+                    "Value": 1
+                },
+                "hanchor": 0,
+                "checked": true,
+                "eventName": "chkMH",
+                "tag": "",
+                "text": "MH",
+                "wrapText": false,
+                "height": 30,
+                "drawable": {
+                    "color": {
+                        "ValueType": 6,
+                        "Value": "0xFFF0F8FF"
+                    },
+                    "csType": "Dbasic.Designer.Drawable.ColorDrawable",
+                    "colorKey": "-fx-base",
+                    "type": "ColorDrawable"
+                },
+                "visible": true,
+                "csType": "Dbasic.Designer.MetaCheckBox",
+                "fontAwesome": "",
+                "toolTip": "",
+                "textColor": {
+                    "ValueType": 6,
+                    "Value": "0xFFF0F8FF"
+                },
+                "javaType": ".CheckboxWrapper",
+                "contextMenu": "",
+                "left": 162,
+                "materialIcons": "",
+                "name": "chkMH",
+                "width": 100,
+                "extraCss": "",
+                "alignment": "CENTER_LEFT",
+                "font": {
+                    "fontName": "DEFAULT",
+                    "csType": "Dbasic.Designer.FontGrid",
+                    "fontSize": {
+                        "ValueType": 7,
+                        "Value": 15
+                    },
+                    "bold": false,
+                    "type": "B4IFontWrapper",
+                    "italic": false
+                }
+            },
+            "4": {
+                "parent": "Main",
+                "borderColor": {
+                    "ValueType": 6,
+                    "Value": "0xFF000000"
+                },
+                "shadow": {
+                    "offsetX": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "offsetY": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "csType": "Dbasic.Designer.ShadowGrid",
+                    "stype": 0,
+                    "type": "",
+                    "radius": {
+                        "ValueType": 7,
+                        "Value": 10
+                    },
+                    "shadowColor": {
+                        "ValueType": 6,
+                        "Value": "0xFF000000"
+                    }
+                },
+                "vanchor": 0,
+                "type": ".ButtonWrapper",
+                "enabled": true,
+                "variant0": {
+                    "top": 10,
+                    "left": 230,
+                    "hanchor": 0,
+                    "width": 140,
+                    "vanchor": 0,
+                    "height": 50
+                },
+                "cornerRadius": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "top": 163,
+                "borderWidth": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "alpha": {
+                    "ValueType": 7,
+                    "Value": 1
+                },
+                "hanchor": 0,
+                "eventName": "BtnGenerate",
+                "tag": "",
+                "text": "Generate",
+                "wrapText": false,
+                "height": 30,
+                "drawable": {
+                    "color": {
+                        "ValueType": 6,
+                        "Value": "0xFFF0F8FF"
+                    },
+                    "csType": "Dbasic.Designer.Drawable.ColorDrawable",
+                    "colorKey": "-fx-base",
+                    "type": "ColorDrawable"
+                },
+                "visible": true,
+                "csType": "Dbasic.Designer.MetaButton",
+                "fontAwesome": "",
+                "toolTip": "",
+                "textColor": {
+                    "ValueType": 6,
+                    "Value": "0xFFF0F8FF"
+                },
+                "javaType": ".ButtonWrapper",
+                "contextMenu": "",
+                "left": 240,
+                "materialIcons": "",
+                "name": "BtnGenerate",
+                "width": 100,
+                "extraCss": "",
+                "alignment": "CENTER",
+                "font": {
+                    "fontName": "DEFAULT",
+                    "csType": "Dbasic.Designer.FontGrid",
+                    "fontSize": {
+                        "ValueType": 7,
+                        "Value": 14
+                    },
+                    "bold": false,
+                    "type": "B4IFontWrapper",
+                    "italic": false
+                }
+            },
+            "5": {
+                "parent": "Main",
+                "borderColor": {
+                    "ValueType": 6,
+                    "Value": "0xFF000000"
+                },
+                "shadow": {
+                    "offsetX": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "offsetY": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "csType": "Dbasic.Designer.ShadowGrid",
+                    "stype": 0,
+                    "type": "",
+                    "radius": {
+                        "ValueType": 7,
+                        "Value": 10
+                    },
+                    "shadowColor": {
+                        "ValueType": 6,
+                        "Value": "0xFF000000"
+                    }
+                },
+                "vanchor": 0,
+                "type": ".TextInputControlWrapper$TextFieldWrapper",
+                "enabled": true,
+                "variant0": {
+                    "top": 10,
+                    "left": 400,
+                    "hanchor": 0,
+                    "width": 120,
+                    "vanchor": 0,
+                    "height": 52
+                },
+                "cornerRadius": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "password": false,
+                "top": 32,
+                "borderWidth": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "alpha": {
+                    "ValueType": 7,
+                    "Value": 1
+                },
+                "hanchor": 0,
+                "eventName": "TxtSubMap",
+                "tag": "",
+                "text": "",
+                "height": 30,
+                "drawable": {
+                    "color": {
+                        "ValueType": 6,
+                        "Value": "0xFFF0F8FF"
+                    },
+                    "csType": "Dbasic.Designer.Drawable.ColorDrawable",
+                    "colorKey": "-fx-base",
+                    "type": "ColorDrawable"
+                },
+                "visible": true,
+                "csType": "Dbasic.Designer.MetaTextField",
+                "editable": true,
+                "toolTip": "",
+                "javaType": ".TextInputControlWrapper$TextFieldWrapper",
+                "contextMenu": "",
+                "left": 120,
+                "name": "TxtSubMap",
+                "width": 100,
+                "extraCss": "",
+                "alignment": "CENTER_LEFT",
+                "prompt": "Sub Mapping",
+                "font": {
+                    "fontName": "DEFAULT",
+                    "csType": "Dbasic.Designer.FontGrid",
+                    "fontSize": {
+                        "ValueType": 7,
+                        "Value": 15
+                    },
+                    "bold": false,
+                    "type": "B4IFontWrapper",
+                    "italic": false
+                }
+            },
+            "6": {
+                "parent": "Main",
+                "borderColor": {
+                    "ValueType": 6,
+                    "Value": "0xFF000000"
+                },
+                "shadow": {
+                    "offsetX": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "offsetY": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "csType": "Dbasic.Designer.ShadowGrid",
+                    "stype": 0,
+                    "type": "",
+                    "radius": {
+                        "ValueType": 7,
+                        "Value": 10
+                    },
+                    "shadowColor": {
+                        "ValueType": 6,
+                        "Value": "0xFF000000"
+                    }
+                },
+                "vanchor": 0,
+                "type": ".TextInputControlWrapper$TextAreaWrapper",
+                "enabled": true,
+                "variant0": {
+                    "top": 70,
+                    "left": 0,
+                    "hanchor": 0,
+                    "width": 300,
+                    "vanchor": 2,
+                    "height": 0
+                },
+                "cornerRadius": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "top": 234,
+                "borderWidth": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "alpha": {
+                    "ValueType": 7,
+                    "Value": 1
+                },
+                "hanchor": 0,
+                "eventName": "TxtHtml",
+                "tag": "",
+                "text": "",
+                "wrapText": false,
+                "height": 100,
+                "drawable": {
+                    "color": {
+                        "ValueType": 6,
+                        "Value": "0xFFF0F8FF"
+                    },
+                    "csType": "Dbasic.Designer.Drawable.ColorDrawable",
+                    "colorKey": "-fx-base",
+                    "type": "ColorDrawable"
+                },
+                "visible": true,
+                "csType": "Dbasic.Designer.MetaTextArea",
+                "editable": true,
+                "toolTip": "",
+                "javaType": ".TextInputControlWrapper$TextAreaWrapper",
+                "contextMenu": "",
+                "left": 195,
+                "name": "TxtHtml",
+                "width": 100,
+                "extraCss": "",
+                "prompt": "Paste your HTML here...",
+                "font": {
+                    "fontName": "DEFAULT",
+                    "csType": "Dbasic.Designer.FontGrid",
+                    "fontSize": {
+                        "ValueType": 7,
+                        "Value": 15
+                    },
+                    "bold": false,
+                    "type": "B4IFontWrapper",
+                    "italic": false
+                }
+            },
+            "7": {
+                "parent": "Main",
+                "borderColor": {
+                    "ValueType": 6,
+                    "Value": "0xFF000000"
+                },
+                "shadow": {
+                    "offsetX": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "offsetY": {
+                        "ValueType": 7,
+                        "Value": 0
+                    },
+                    "csType": "Dbasic.Designer.ShadowGrid",
+                    "stype": 0,
+                    "type": "",
+                    "radius": {
+                        "ValueType": 7,
+                        "Value": 10
+                    },
+                    "shadowColor": {
+                        "ValueType": 6,
+                        "Value": "0xFF000000"
+                    }
+                },
+                "vanchor": 0,
+                "type": ".TextInputControlWrapper$TextAreaWrapper",
+                "enabled": true,
+                "variant0": {
+                    "top": 70,
+                    "left": 300,
+                    "hanchor": 0,
+                    "width": 300,
+                    "vanchor": 2,
+                    "height": 0
+                },
+                "cornerRadius": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "top": 234,
+                "borderWidth": {
+                    "ValueType": 7,
+                    "Value": 0
+                },
+                "alpha": {
+                    "ValueType": 7,
+                    "Value": 1
+                },
+                "hanchor": 0,
+                "eventName": "TxtB4X",
+                "tag": "",
+                "text": "",
+                "wrapText": false,
+                "height": 100,
+                "drawable": {
+                    "color": {
+                        "ValueType": 6,
+                        "Value": "0xFFF0F8FF"
+                    },
+                    "csType": "Dbasic.Designer.Drawable.ColorDrawable",
+                    "colorKey": "-fx-base",
+                    "type": "ColorDrawable"
+                },
+                "visible": true,
+                "csType": "Dbasic.Designer.MetaTextArea",
+                "editable": true,
+                "toolTip": "",
+                "javaType": ".TextInputControlWrapper$TextAreaWrapper",
+                "contextMenu": "",
+                "left": 195,
+                "name": "TxtB4X",
+                "width": 100,
+                "extraCss": "",
+                "prompt": "B4X",
+                "font": {
+                    "fontName": "DEFAULT",
+                    "csType": "Dbasic.Designer.FontGrid",
+                    "fontSize": {
+                        "ValueType": 7,
+                        "Value": 15
+                    },
+                    "bold": false,
+                    "type": "B4IFontWrapper",
+                    "italic": false
+                }
+            }
+        },
+        "csType": "Dbasic.Designer.MetaMain",
+        "handleResizeEvent": true,
+        "type": ".PaneWrapper$ConcretePaneWrapper",
+        "title": "MiniHtml2 Code Generator",
+        "enabled": true,
+        "variant0": {
+            "top": 0,
+            "left": 0,
+            "hanchor": 0,
+            "width": 200,
+            "vanchor": 0,
+            "height": 200
+        },
+        "cornerRadius": {
+            "ValueType": 7,
+            "Value": 0
+        },
+        "javaType": ".PaneWrapper$ConcretePaneWrapper",
+        "duration": 0,
+        "file": "",
+        "borderWidth": {
+            "ValueType": 7,
+            "Value": 0
+        },
+        "alpha": {
+            "ValueType": 7,
+            "Value": 1
+        },
+        "name": "Main",
+        "eventName": "MainForm",
+        "extraCss": "",
+        "tag": ""
+    },
+    "FontAwesome": false
+}
